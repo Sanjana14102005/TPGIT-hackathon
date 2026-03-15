@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Faculty Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    display:flex;
+    height:100vh;
+}
+
+/* LEFT & RIGHT SIDEBARS */
+.sidebar{
+    width:250px;
+    background:#111827;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.right-sidebar{
+    width:230px;
+    background:#111827;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    padding:10px;
+}
+
+.category, .special-category{
+    display:flex;
+    flex-direction:column;
+}
+
+.category button, .special-category button{
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#1f2937;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    text-align:left;
+}
+
+.category button:hover, .special-category button:hover{
+    background:#374151;
+}
+
+/* MAIN CONTENT */
+.main{
+    flex:1;
+    padding:30px;
+    overflow-y:auto;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.search{
+    padding:8px;
+    width:250px;
+    border-radius:5px;
+    border:none;
+}
+
+.notice{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    position:relative;
+}
+
+.badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    padding:4px 8px;
+    border-radius:5px;
+    font-size:12px;
+}
+
+.btn{
+    padding:6px 12px;
+    margin-right:10px;
+    border:none;
+    border-radius:5px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+}
+
+.modal-content{
+    background:#1f2937;
+    width:60%;
+    padding:20px;
+    border-radius:12px;
+}
+
+.close{
+    float:right;
+    cursor:pointer;
+    font-size:20px;
+}
+/* URGENT BLINK */
+@keyframes blinkUrgent {
+    0% { opacity: 1; }
+    50% { opacity: 0.3; }
+    100% { opacity: 1; }
+}
+
+.urgent-blink {
+    animation: blinkUrgent 1s infinite;
+}
+
+.notice {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.notice:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.notice {
+    animation: fadeIn 0.4s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.expiring-badge {
+    background: orange;
+    color: black;
+    animation: glowOrange 1.5s infinite alternate;
+}
+
+@keyframes glowOrange {
+    from { box-shadow: 0 0 5px orange; }
+    to { box-shadow: 0 0 15px orange; }
+}
+.category-btn {
+    position: relative;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 12px;
+    background: #1f2a3c;
+    color: white;
+    border: none;
+    border-radius: 10px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 15px;
+    transition: 0.3s;
+}
+
+.category-btn:hover {
+    background: #2d3c55;
+}
+
+.count-badge {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #e11d48;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 50px;
+    min-width: 22px;
+    text-align: center;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<!-- LEFT SIDEBAR -->
+<div class="sidebar">
+    <div>
+        <div class="profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+            <h3>Faculty</h3>
+        </div>
+        
+        <div class="category">
+          <button class="category-btn" onclick="filterCategory('All')">
+    All
+    <span class="count-badge" id="count-All">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('General')">
+    General
+    <span class="count-badge" id="count-General">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Event')">
+    Event
+    <span class="count-badge" id="count-Event">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Exam')">
+    Exam
+    <span class="count-badge" id="count-Exam">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Holiday')">
+    Holiday
+    <span class="count-badge" id="count-Holiday">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Sports')">
+    Sports
+    <span class="count-badge" id="count-Sports">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Cultural')">
+    Cultural
+    <span class="count-badge" id="count-Cultural">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Workshop')">
+    Workshop
+    <span class="count-badge" id="count-Workshop">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Seminar')">
+    Seminar
+    <span class="count-badge" id="count-Seminar">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Faculty Meetings')">
+    Faculty Meetings
+    <span class="count-badge" id="count-Faculty Meetings">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Examination Duty')">
+    Examination Duty
+    <span class="count-badge" id="count-Examination Duty">0</span>
+</button>
+  
+        </div>
+    </div>
+</div>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+    <div class="topbar">
+        <input type="text" class="search" placeholder="Search..." onkeyup="searchNotice(this.value)">
+        <div>🔔</div>
+    </div>
+
+    <div id="noticeContainer"></div>
+</div>
+
+<!-- RIGHT SIDEBAR -->
+<div class="right-sidebar">
+
+    <div class="category">
+        <h4>Filter By Target</h4>
+        <button onclick="filterTarget('All Students')">All Students</button>
+        <button onclick="filterTarget('1st Year')">First Year</button>
+        <button onclick="filterTarget('2nd Year')">Second Year</button>
+        <button onclick="filterTarget('3rd Year')">Third Year</button>
+        <button onclick="filterTarget('4th Year')">Fourth Year</button>
+    </div>
+
+    <div class="special-category">
+        <h4>Special Notices</h4>
+        <button onclick="showUrgentNotices()">🚨 Urgent Notices</button>
+        <button onclick="showImportantNotices()">⭐ Important Notices</button>
+        <button onclick="showExpiredNotices()">⏰ Expired Notices</button>
+    </div>
+
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="previewModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">❌</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+let notices=[];
+let container=document.getElementById("noticeContainer");
+let previewModal=document.getElementById("previewModal");
+let modalBody=document.getElementById("modalBody");
+
+/* LOAD NOTICES */
+function loadNotices(){
+    let all=JSON.parse(localStorage.getItem("notices"))||[];
+
+    notices=all.filter(n=>!n.archived)
+        .map(n=>({
+
+            id:n.id,
+            title:n.title,
+            description:n.desc||"",
+            category:n.category,
+            file:n.file||"",
+            postedDate:n.posted||"Not Set",
+            expiryDate:n.expiry||"No Expiry",
+
+            // FIX TARGET FORMAT
+            target: formatTarget(n.target),
+
+            // FIX PRIORITY SYSTEM
+            important: n.priority==="important",
+            urgent: n.priority==="urgent"
+
+        }));
+}
+
+function updateCategoryCounts(){
+
+    let categories = [
+        "General",
+        "Event",
+        "Exam",
+        "Holiday",
+        "Sports",
+        "Cultural",
+        "Workshop",
+        "Seminar",
+        "Faculty Meetings",
+        "Examination Duty"
+    ];
+
+    // ALL count
+    let allCount = notices.filter(n=>!n.archived).length;
+    document.getElementById("count-All").innerText = allCount;
+
+    categories.forEach(cat=>{
+        let count = notices.filter(n=>n.category === cat && !n.archived).length;
+
+        let badge = document.getElementById("count-"+cat);
+
+        if(badge){
+            badge.innerText = count;
+
+            // Hide badge if 0
+            badge.style.display = count === 0 ? "none" : "inline-block";
+        }
+    });
+}
+
+
+function formatTarget(t){
+    if(!t) return "All Students";
+
+    if(t.includes("1")) return "1st Year";
+    if(t.includes("2")) return "2nd Year";
+    if(t.includes("3")) return "3rd Year";
+    if(t.includes("4")) return "4th Year";
+
+    if(t.toLowerCase().includes("all")) return "All Students";
+
+    return t;
+}
+
+function isExpiringSoon(expiryDate){
+    if(!expiryDate || expiryDate==="No Expiry") return false;
+
+    let today = new Date();
+    let expiry = new Date(expiryDate);
+
+    let diffTime = expiry - today;
+    let diffDays = diffTime / (1000 * 60 * 60 * 24);
+
+    return diffDays > 0 && diffDays <= 2;
+}
+
+
+/* RENDER */
+function renderNotices(list){
+    container.innerHTML="";
+    let today=new Date();
+
+    if(list.length===0){
+        container.innerHTML="<h2>No Notices Found</h2>";
+        return;
+    }
+
+    list.forEach(n=>{
+        let div=document.createElement("div");
+        div.className="notice";
+
+        let badgeHTML="";
+
+        if(n.urgent){
+    badgeHTML=`<div class="badge urgent-blink" style="background:red;">URGENT</div>`;
+}
+else if(isExpiringSoon(n.expiryDate)){
+    badgeHTML=`<div class="badge expiring-badge">EXPIRING SOON</div>`;
+}
+else if(n.important){
+    badgeHTML=`<div class="badge" style="background:gold;color:black;">IMPORTANT</div>`;
+}
+else{
+    badgeHTML=`<div class="badge" style="background:gray;">GENERAL</div>`;
+}
+
+
+        div.innerHTML=`
+        ${badgeHTML}
+        <h3>${n.title}</h3>
+        <p>${n.description}</p>
+        <small>Category: ${n.category}</small><br>
+        <small>Target: ${n.target}</small><br>
+        <small>Posted: ${n.postedDate}</small><br>
+        <small>Expiry: ${n.expiryDate}</small><br><br>
+        ${n.file?`
+<small>${getFileIcon(n.file)}</small><br><br>
+<button class="btn" onclick="previewFile('${n.file}')">Open</button>
+<button class="btn" onclick="downloadFile('${n.file}','${n.title}')">Download</button>
+`:`<small>No File</small>`}
+
+        `;
+
+        container.appendChild(div);
+    });
+}
+
+/* FILTERS */
+function filterCategory(cat){
+    if(cat==="All"){
+        renderNotices(notices);
+    }else{
+        renderNotices(notices.filter(n=>n.category===cat));
+    }
+}
+
+function filterTarget(year){
+    renderNotices(notices.filter(n=>n.target===year));
+}
+
+function showImportantNotices(){
+    renderNotices(notices.filter(n=>n.important));
+}
+
+function showUrgentNotices(){
+    renderNotices(notices.filter(n=>n.urgent));
+}
+
+function showExpiredNotices(){
+    let today=new Date();
+    renderNotices(notices.filter(n=>n.expiryDate!=="No Expiry" && new Date(n.expiryDate)<today));
+}
+
+function searchNotice(val){
+    renderNotices(notices.filter(n=>
+        n.title.toLowerCase().includes(val.toLowerCase()) ||
+        n.description.toLowerCase().includes(val.toLowerCase())
+    ));
+}
+
+/* FILE */
+function previewFile(file){
+    modalBody.innerHTML=`<iframe src="${file}" width="100%" height="500"></iframe>`;
+    previewModal.style.display="flex";
+}
+function closeModal(){
+    previewModal.style.display="none";
+    modalBody.innerHTML="";
+}
+function downloadFile(file,name){
+    let a=document.createElement("a");
+    a.href=file;
+    a.download=name;
+    a.click();
+}
+
+function getFileIcon(file){
+    if(!file) return "";
+
+    if(file.includes("pdf")){
+        return "📄 PDF";
+    }
+    if(file.includes("image")){
+        return "🖼 Image";
+    }
+    if(file.includes("word")){
+        return "📝 Word";
+    }
+    return "📁 File";
+}
+
+
+/* AUTO REFRESH */
+function autoRefresh(){
+    loadNotices();
+    renderNotices(notices);
+    updateCategoryCounts();
+}
+
+setInterval(autoRefresh,120000);
+autoRefresh();
+</script>
+
+</body>
+</html>

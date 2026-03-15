@@ -1,0 +1,12 @@
+[
+  {
+    "title": "Hackathon Announcement",
+    "description": "Submit your project before Friday 5PM.",
+    "image": "images/notice1.jpg"
+  },
+  {
+    "title": "Exam Postponed",
+    "description": "The internal exam is postponed to next Monday.",
+    "image": "images/notice2.jpg"
+  }
+]

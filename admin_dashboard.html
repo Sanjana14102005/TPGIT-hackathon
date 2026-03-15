@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Admin Dashboard</title>
+
+<style>
+body{
+    margin:0;
+    font-family:Segoe UI;
+    background:linear-gradient(135deg,#0f172a,#1e293b);
+    color:white;
+    display:flex;
+    flex-direction:column;
+    height:100vh;
+    overflow:hidden;
+}
+
+/* Header & Marquee */
+header{
+    width:100%;
+    background:#111827;
+    padding:10px 20px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    position:relative;
+    box-shadow: 0 0 15px #2563eb30; /* subtle glow effect */
+}
+header h1{
+    margin:5px 0;
+    color:#0394f5;
+}
+header marquee{
+    width:100%;
+    color:#fbbf24;
+    font-weight:bold;
+    font-size:14px;
+}
+
+/* Layout */
+.main-container{
+    display:flex;
+    flex:1;
+    overflow:hidden;
+}
+.left{
+    width:260px;
+    background:#111827;
+    padding:25px;
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    padding:10px;
+}
+
+.profile h3{
+        margin-top:10px;
+}
+
+.nav button{
+    width:100%;
+    padding:14px;
+    margin-bottom:12px;
+    background:#1f2937;
+    color:white;
+    border:none;
+    border-radius:10px;
+    transition:0.3s;
+    text-align:left;
+}
+.nav button:hover{background:#034fc9;}
+.nav button.active{background:#2563eb;}
+
+.center{flex:1;padding:20px;overflow-y:auto;}
+.right{
+    width:280px;
+    background:#111827;
+    padding:20px;
+}
+
+input,select,textarea{
+    width:100%;
+    padding:10px;
+    margin-bottom:12px;
+    border:none;
+    border-radius:8px;
+    box-sizing:border-box;
+}
+
+.notice-box{
+    background:#1f2937;
+    padding:20px;
+    border-radius:14px;
+    margin-bottom:20px;
+    animation:fade 0.3s ease;
+    word-break:break-word;
+    position:relative;
+}
+.notice-box .badges{
+    position:absolute;
+    top:10px;
+    right:10px;
+    display:flex;
+    gap:5px;
+}
+.notice-box .badges span{
+    padding:2px 6px;
+    border-radius:5px;
+    font-size:12px;
+}
+
+/* Badge colors */
+.badge-urgent{background:#f87171;color:white;}
+.badge-important{background:#facc15;color:black;}
+.badge-general{background:#22c55e;color:white;}
+
+.notice-actions button{
+    margin-right:8px;
+    margin-top:10px;
+    padding:8px 14px;
+    border:none;
+    border-radius:8px;
+    color:white;
+    font-weight:500;
+}
+
+.btn-open{background:#3b82f6;}
+.btn-download{background:#10b981;}
+.btn-edit{background:#f59e0b;}
+.btn-delete{background:#ef4444;}
+.btn-archive{background:#8b5cf6;}
+.btn-restore{background:#22c55e;}
+
+button:hover{opacity:0.85;}
+
+.modal{
+    position:fixed;
+    top:0;left:0;
+    width:100%;height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:100;
+}
+.modal-content{
+    background:#1f2937;
+    width:80%;
+    max-height:80%;
+    overflow:auto;
+    padding:20px;
+    border-radius:12px;
+    position:relative;
+}
+.close{
+    position:absolute;
+    right:15px;
+    top:10px;
+    cursor:pointer;
+    font-size:20px;
+}
+
+@keyframes fade{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+@media(max-width:900px){
+    .main-container{flex-direction:column;}
+    .left,.right{width:100%;}
+    .center{padding:10px;}
+    .modal-content{width:95%;}
+}
+</style>
+</head>
+
+<body>
+
+<header>
+    <h1>⚡ Admin Dashboard</h1>
+    <marquee behavior="scroll" scrollamount="6">Welcome to the Admin Dashboard — Manage notices efficiently!</marquee>
+</header>
+
+<div class="main-container">
+<div class="left">
+    <div class="profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+            <h3>Admin</h3>
+    </div>
+
+    <div class="nav">
+        <button onclick="navigate('create')" id="btnCreate">Create Notice</button>
+        <button onclick="navigate('active')" id="btnActive">Active Notices</button>
+        <button onclick="navigate('important')" id="btnImportant">Important Notices</button>
+        <button onclick="navigate('urgent')" id="btnUrgent">Urgent Notices</button>
+        <button onclick="navigate('archive')" id="btnArchive">Archived Notices</button>
+    </div>
+</div>
+
+<div class="center" id="main"></div>
+
+<div class="right">
+    <input type="text" id="searchInput" placeholder="Search..." onkeyup="applyFilters()">
+    <select id="categoryFilter" onchange="applyFilters()">
+        <option value="">Filter Category</option>
+        <option>General</option>
+        <option>Exam</option>
+        <option>Event</option>
+        <option>Holiday</option>
+        <option>Placements</option>
+        <option>Sports</option>
+        <option>Cultural</option>
+        <option>Circulars</option>
+    </select>
+</div>
+</div>
+
+<div class="modal" id="previewModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">❌</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+
+
+let notices = JSON.parse(localStorage.getItem("notices")) || [];
+
+let newNotice = {
+    title: document.getElementById("title").value,
+    description: document.getElementById("description").value,
+    target: document.getElementById("target").value  // IMPORTANT
+};
+
+notices.push(newNotice);
+localStorage.setItem("notices", JSON.stringify(notices));
+
+/* NAVIGATION */
+function navigate(section){
+
+    if(section==="dashboard"){
+        showDashboardDefault();
+        return;
+    }
+
+    if(section==="create") showCreate();
+    if(section==="active") showActive();
+    if(section==="important") showImportant();
+    if(section==="urgent") showUrgent();
+    if(section==="archive") showArchive();
+}
+
+window.onload = function(){
+    navigate("dashboard");
+};
+
+
+/* CREATE NOTICE */
+function showCreate(){
+document.getElementById("main").innerHTML=`
+<div class="notice-box">
+<h2>Create Notice</h2>
+<input id="title" placeholder="Title">
+<textarea id="desc" placeholder="Description"></textarea>
+
+<select id="category">
+<option>General</option>
+<option>Exam</option>
+<option>Event</option>
+<option>Holiday</option>
+<option>Placements</option>
+<option>Sports</option>
+<option>Cultural</option>
+<option>Circulars</option>
+</select>
+
+<label>Target:</label>
+<select id="target">
+<option>All Students</option>
+<option>Year: 1st</option>
+<option>Year: 2nd</option>
+<option>Year: 3rd</option>
+<option>Year: 4th</option>
+</select>
+
+<label>Priority:</label>
+<div style="display:flex; gap:10px; margin-bottom:10px;">
+<label><input type="radio" name="priority" value="general" checked> 🟢 General</label>
+<label><input type="radio" name="priority" value="important"> ⭐ Important</label>
+<label><input type="radio" name="priority" value="urgent"> ⚠️ Urgent</label>
+</div>
+
+<label>Posting Date:</label>
+<input type="date" id="posted">
+<label>Expiry Date:</label>
+<input type="date" id="expiry">
+
+<input type="file" id="file"><br>
+<button class="btn-open" onclick="uploadNotice()">Upload</button>
+<button class="btn-delete" onclick="navigate('active')">Cancel</button>
+</div>`;
+}
+
+function uploadNotice(){
+let fileInput=document.getElementById("file");
+let postDate=document.getElementById("posted").value || new Date().toISOString().split('T')[0];
+let priority = document.querySelector('input[name="priority"]:checked').value;
+
+let reader = new FileReader();
+reader.onload = function(e){
+let notice={
+id:Date.now(),
+title:document.getElementById("title").value,
+desc:document.getElementById("desc").value,
+category:document.getElementById("category").value,
+target:document.getElementById("target").value,
+priority:priority,
+file:e.target.result,
+fileName:fileInput.files[0].name,
+archived:false,
+posted:postDate,
+expiry:document.getElementById("expiry").value
+};
+notices.unshift(notice);
+localStorage.setItem("notices",JSON.stringify(notices));
+navigate("active");
+};
+if(fileInput.files[0]){
+    reader.readAsDataURL(fileInput.files[0]);
+}else{
+    alert("Please upload a file");
+}
+}
+
+/* RENDER */
+function render(data,isArchive=false){
+if(data.length===0){
+document.getElementById("main").innerHTML="<h2>No Notices Found</h2>";
+return;
+}
+let html="";
+data.forEach(n=>{
+let badge="";
+if(n.priority==="urgent") badge='<span class="badge-urgent">⚠️Urgent</span>';
+else if(n.priority==="important") badge='<span class="badge-important">⭐Important</span>';
+else badge='<span class="badge-general">🟢General</span>';
+
+html+=`
+<div class="notice-box" id="notice-${n.id}">
+<div class="badges">${badge}</div>
+<h3>${n.title}</h3>
+<p>${n.desc}</p>
+<small>Category: ${n.category}</small><br>
+<small>Target: ${n.target}</small><br>
+<small>Posted: ${n.posted || "Not Set"}</small><br>
+<small>Expiry: ${n.expiry || "No Expiry"}</small>
+<div class="notice-actions">
+<button class="btn-open" onclick="preview(${n.id})">Open</button>
+<button class="btn-download" onclick="download(${n.id})">Download</button>
+${!isArchive?`
+<button class="btn-edit" onclick="editNotice(${n.id})">Edit</button>
+<button class="btn-delete" onclick="removeNotice(${n.id})">Delete</button>
+<button class="btn-archive" onclick="archive(${n.id})">Archive</button>`:
+`<button class="btn-restore" onclick="restore(${n.id})">Restore</button>`}
+</div>
+</div>`;
+});
+document.getElementById("main").innerHTML=html;
+}
+/* TODAY NOTICES ON DASHBOARD LOAD */
+
+function showDashboardDefault(){
+
+    let today = new Date().toISOString().split("T")[0];
+
+    let todayNotices = notices.filter(function(n){
+        return !n.archived && n.posted === today;
+    });
+
+    if(todayNotices.length > 0){
+        render(todayNotices);
+    } else {
+        showActive(); // fallback
+    }
+}
+
+/* SHOW SECTIONS */
+function showActive(){render(notices.filter(n=>!n.archived));}
+function showImportant(){render(notices.filter(n=>n.priority==="important"&&!n.archived));}
+function showUrgent(){render(notices.filter(n=>n.priority==="urgent"&&!n.archived));}
+function showArchive(){render(notices.filter(n=>n.archived),true);}
+
+/* MODAL PREVIEW */
+function preview(id){
+let n=notices.find(x=>x.id===id);
+let body=document.getElementById("modalBody");
+if(n.file.startsWith("data:image")){
+body.innerHTML=`<img src="${n.file}" width="100%">`;
+}else if(n.file.startsWith("data:video")){
+body.innerHTML=`<video src="${n.file}" controls width="100%"></video>`;
+}else{
+body.innerHTML=`<iframe src="${n.file}" width="100%" height="500"></iframe>`;
+}
+previewModal.style.display="flex";
+}
+function closeModal(){previewModal.style.display="none";}
+
+/* DOWNLOAD / DELETE / ARCHIVE / RESTORE */
+function download(id){
+let n=notices.find(x=>x.id===id);
+let a=document.createElement("a");
+a.href=n.file;
+a.download=n.fileName;
+a.click();
+}
+function removeNotice(id){
+if(confirm("Delete permanently?")){
+notices=notices.filter(n=>n.id!==id);
+localStorage.setItem("notices",JSON.stringify(notices));
+showActive();
+}
+}
+function archive(id){
+let n=notices.find(x=>x.id===id);
+n.archived=true;
+localStorage.setItem("notices",JSON.stringify(notices));
+showActive();
+}
+function restore(id){
+let n=notices.find(x=>x.id===id);
+n.archived=false;
+localStorage.setItem("notices",JSON.stringify(notices));
+showArchive();
+}
+
+/* FILTERS */
+function applyFilters(){
+let text=document.getElementById("searchInput").value.toLowerCase();
+let cat=document.getElementById("categoryFilter").value;
+let filtered=notices.filter(n=>!n.archived &&
+(cat===""||n.category===cat) &&
+(n.title.toLowerCase().includes(text)||n.desc.toLowerCase().includes(text)));
+render(filtered);
+}
+/* ===========================
+   INLINE EDIT (SAFE VERSION)
+   =========================== */
+
+function editNotice(id){
+    let n = notices.find(x=>x.id===id);
+    let box = document.getElementById("notice-"+id);
+
+    box.innerHTML = `
+        <div class="badges"></div>
+
+        <input id="editTitle-${id}" value="${n.title}">
+        <textarea id="editDesc-${id}">${n.desc}</textarea>
+
+        <select id="editCategory-${id}">
+            <option ${n.category==="General"?"selected":""}>General</option>
+            <option ${n.category==="Exam"?"selected":""}>Exam</option>
+            <option ${n.category==="Event"?"selected":""}>Event</option>
+            <option ${n.category==="Holiday"?"selected":""}>Holiday</option>
+            <option ${n.category==="Placements"?"selected":""}>Placements</option>
+            <option ${n.category==="Sports"?"selected":""}>Sports</option>
+            <option ${n.category==="Cultural"?"selected":""}>Cultural</option>
+            <option ${n.category==="Circulars"?"selected":""}>Circulars</option>
+        </select>
+
+        <select id="editTarget-${id}">
+            <option ${n.target==="All Students"?"selected":""}>All Students</option>
+            <option ${n.target==="Year: 1st"?"selected":""}>Year: 1st</option>
+            <option ${n.target==="Year: 2nd"?"selected":""}>Year: 2nd</option>
+            <option ${n.target==="Year: 3rd"?"selected":""}>Year: 3rd</option>
+            <option ${n.target==="Year: 4th"?"selected":""}>Year: 4th</option>
+        </select>
+
+        <label>Priority:</label>
+        <div style="display:flex; gap:10px; margin-bottom:10px;">
+            <label><input type="radio" name="editPriority-${id}" value="general" ${n.priority==="general"?"checked":""}> 🟢 General</label>
+            <label><input type="radio" name="editPriority-${id}" value="important" ${n.priority==="important"?"checked":""}> ⭐ Important</label>
+            <label><input type="radio" name="editPriority-${id}" value="urgent" ${n.priority==="urgent"?"checked":""}> ⚠️ Urgent</label>
+        </div>
+
+        <label>Posting Date:</label>
+        <input type="date" id="editPosted-${id}" value="${n.posted||""}">
+
+        <label>Expiry Date:</label>
+        <input type="date" id="editExpiry-${id}" value="${n.expiry||""}">
+
+        <p>Current File: ${n.fileName}</p>
+        <input type="file" id="editFile-${id}">
+
+        <div class="notice-actions">
+            <button class="btn-open" onclick="saveEdit(${id})">Save</button>
+            <button class="btn-delete" onclick="navigate('active')">Cancel</button>
+        </div>
+    `;
+}
+
+
+function saveEdit(id){
+    let n = notices.find(x=>x.id===id);
+
+    n.title = document.getElementById("editTitle-"+id).value;
+    n.desc = document.getElementById("editDesc-"+id).value;
+    n.category = document.getElementById("editCategory-"+id).value;
+    n.target = document.getElementById("editTarget-"+id).value;
+    n.posted = document.getElementById("editPosted-"+id).value;
+    n.expiry = document.getElementById("editExpiry-"+id).value;
+    n.priority = document.querySelector('input[name="editPriority-'+id+'"]:checked').value;
+
+    let fileInput = document.getElementById("editFile-"+id);
+
+    if(fileInput.files.length > 0){
+        let reader = new FileReader();
+        reader.onload = function(e){
+            n.file = e.target.result;
+            n.fileName = fileInput.files[0].name;
+            localStorage.setItem("notices", JSON.stringify(notices));
+            navigate("active");
+        };
+        reader.readAsDataURL(fileInput.files[0]);
+    }else{
+        localStorage.setItem("notices", JSON.stringify(notices));
+        navigate("active");
+    }
+}
+
+</script>
+
+</body>
+</html>

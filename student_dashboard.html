@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Student Dashboard</title>
+<style>
+/* General Styles */
+body{
+margin:0;
+font-family:Segoe UI;
+background:linear-gradient(135deg,#0f172a,#1e293b);
+color:white;
+display:grid;
+grid-template-columns:260px 1fr 260px;
+height:100vh;
+overflow:hidden;
+}
+
+
+/* Sidebar */
+.sidebar{
+    width:260px;
+    background:#111827;
+    padding:20px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+}
+
+.profile{
+    text-align:center;
+    margin-bottom:30px;
+}
+
+.profile img{
+    width:90px;
+    height:90px;
+    border-radius:50%;
+    background:white;
+    padding:10px;
+}
+
+.profile h3{
+    margin-top:10px;
+}
+
+.category, .special-category{
+    display:flex;
+    flex-direction:column;
+}
+
+.category button, .special-category button{
+    width:100%;
+    padding:10px;
+    margin-bottom:8px;
+    background:#1f2937;
+    color:white;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    text-align:left;
+}
+
+.category button:hover, .special-category button:hover{
+    background:#374151;
+}
+
+.count{
+    float:right;
+    background:crimson;
+    padding:2px 8px;
+    border-radius:12px;
+    font-size:12px;
+}
+
+
+/* Main */
+.main{
+    flex:1;
+    padding:30px;
+    overflow-y:auto;
+}
+
+.topbar{
+    display:flex;
+    justify-content:space-between;
+    margin-bottom:20px;
+}
+
+.search{
+    padding:8px;
+    width:250px;
+    border-radius:5px;
+    border:none;
+}
+
+.bell{
+    font-size:22px;
+    animation:ring 2s infinite;
+}
+
+@keyframes ring{
+    0%{transform:rotate(0)}
+    10%{transform:rotate(15deg)}
+    20%{transform:rotate(-10deg)}
+    30%{transform:rotate(5deg)}
+    40%{transform:rotate(0)}
+}
+
+/* Notices */
+.notice{
+    background:#1e293b;
+    padding:20px;
+    border-radius:12px;
+    margin-bottom:20px;
+    position:relative;
+    animation:fade 0.3s ease;
+}
+
+.notice.important{
+    border-left:6px solid gold;
+}
+
+.badge{
+    position:absolute;
+    top:10px;
+    right:10px;
+    background:orange;
+    padding:3px 8px;
+    border-radius:5px;
+    font-size:12px;
+}
+
+.btn{
+    padding:6px 12px;
+    margin-right:10px;
+    border:none;
+    border-radius:5px;
+    background:#2563eb;
+    color:white;
+    cursor:pointer;
+}
+
+/* Animations */
+@keyframes fade{
+    from{opacity:0; transform:translateY(10px);}
+    to{opacity:1; transform:translateY(0);}
+}
+
+/* Modal */
+.modal{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:rgba(0,0,0,0.7);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    z-index:999;
+}
+
+.modal-content{
+    background:#1f2937;
+    width:60%;
+    max-height:80%;
+    overflow:auto;
+    padding:20px;
+    border-radius:12px;
+    position:relative;
+}
+
+.close{
+    position:absolute;
+    right:15px;
+    top:10px;
+    cursor:pointer;
+    font-size:20px;
+    color:white;
+}
+
+/* Dashboard header */
+.dashboard-header{
+    text-align:center;
+    margin-bottom:15px;
+}
+
+.dashboard-header h1{
+    font-size:32px;
+    margin:5px 0;
+}
+
+.dashboard-header marquee{
+    font-size:16px;
+    color:#facc15;
+}
+.category-btn{
+    position:relative;
+    width:100%;
+    padding:12px 15px;
+    margin-bottom:10px;
+    background:#1f2937;
+    color:white;
+    border:none;
+    border-radius:10px;
+    text-align:left;
+    cursor:pointer;
+    transition:0.3s;
+    font-size:14px;
+}
+
+.category-btn:hover{
+    background:#374151;
+}
+
+.count-badge{
+    position:absolute;
+    right:12px;
+    top:50%;
+    transform:translateY(-50%);
+    background:#e11d48;
+    color:white;
+    font-size:12px;
+    font-weight:bold;
+    padding:4px 8px;
+    border-radius:50px;
+    min-width:22px;
+    text-align:center;
+}
+@keyframes blinkUrgent{
+0%{opacity:1;}
+50%{opacity:0.3;}
+100%{opacity:1;}
+}
+
+.urgent-blink{
+animation:blinkUrgent 1s infinite;
+}
+.expiring-badge{
+background:orange;
+color:black;
+}
+.right-sidebar{
+background:#0f172a;
+padding:20px;
+display:flex;
+flex-direction:column;
+justify-content:space-between;
+}
+
+.right-sidebar h4{
+margin-bottom:10px;
+color:#facc15;
+font-size:14px;
+}
+
+.right-btn{
+width:100%;
+padding:10px;
+margin-bottom:10px;
+background:#1f2937;
+color:white;
+border:none;
+border-radius:10px;
+cursor:pointer;
+text-align:left;
+transition:0.3s;
+}
+
+.right-btn:hover{
+background:#374151;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="sidebar">
+    <div>
+        <div class="profile">
+            <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png">
+            <h3>Student</h3>
+        </div>
+        <div class="category">
+
+<button class="category-btn" onclick="filterCategory('All')">
+All
+<span class="count-badge" id="countAll">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('General')">
+General
+<span class="count-badge" id="countGeneral">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Event')">
+Event
+<span class="count-badge" id="countEvent">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Exam')">
+Exam
+<span class="count-badge" id="countExam">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Holiday')">
+Holiday
+<span class="count-badge" id="countHoliday">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Sports')">
+Sports
+<span class="count-badge" id="countSports">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Cultural')">
+Cultural
+<span class="count-badge" id="countCultural">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Workshop')">
+Workshop
+<span class="count-badge" id="countWorkshop">0</span>
+</button>
+
+<button class="category-btn" onclick="filterCategory('Seminar')">
+Seminar
+<span class="count-badge" id="countSeminar">0</span>
+</button>
+
+</div>
+
+    </div>
+</div>
+
+<div class="main">
+    <div class="dashboard-header">
+        <h1>Student Dashboard</h1>
+        <marquee behavior="scroll" direction="left">Stay updated with all student notices, events, exams, and holidays!</marquee>
+    </div>
+
+    <div class="topbar">
+        <input type="text" class="search" placeholder="Search notice..." onkeyup="searchNotice(this.value)">
+        <div class="bell">🔔</div>
+    </div>
+
+    <div id="noticeContainer"></div>
+</div>
+<div class="right-sidebar">
+
+<div class="target-section">
+<h4>Filter By Target</h4>
+
+<button class="right-btn" onclick="filterTarget('All Students')">All Students</button>
+<button class="right-btn" onclick="filterTarget('1st Year')">First Year</button>
+<button class="right-btn" onclick="filterTarget('2nd Year')">Second Year</button>
+<button class="right-btn" onclick="filterTarget('3rd Year')">Third Year</button>
+<button class="right-btn" onclick="filterTarget('4th Year')">Fourth Year</button>
+</div>
+
+<div class="special-section">
+<h4>Special Notices</h4>
+
+<button class="right-btn" onclick="showUrgent()">🚨 Urgent Notices</button>
+<button class="right-btn" onclick="showImportant()">⭐ Important Notices</button>
+<button class="right-btn" onclick="showExpired()">⏰ Expired Notices</button>
+
+</div>
+
+</div>
+
+
+<div class="modal" id="previewModal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">❌</span>
+        <div id="modalBody"></div>
+    </div>
+</div>
+
+<script>
+let notices=[];
+let container=document.getElementById("noticeContainer");
+let previewModal=document.getElementById("previewModal");
+let modalBody=document.getElementById("modalBody");
+
+/* Load notices visible to students only */
+/* Load notices visible to students only */
+function loadNotices(){
+
+let all = JSON.parse(localStorage.getItem("notices")) || [];
+
+notices = all.filter(n =>
+    !n.archived &&
+    ["General","Event","Exam","Holiday","Sports","Cultural","Workshop","Seminar"]
+    .includes(n.category)
+).map(n => ({
+
+    id: n.id,
+    title: n.title,
+    description: n.desc || "",
+    category: n.category,
+    file: n.file || "",
+    target: formatTarget(n.target),
+ // ✅ ONLY ONCE
+    postedDate: n.posted || "Not Set",
+    expiryDate: n.expiry || "No Expiry",
+
+    important: n.priority === "important",
+    urgent: n.priority === "urgent"
+
+}));
+
+applyFilters();
+}
+function formatTarget(t){
+
+if(!t) return "All Students";
+
+if(t.includes("Year:")){
+let year = t.replace("Year:","").trim();
+return year + " Year";
+}
+
+return t;
+}
+
+
+let selectedCategory = "All";
+let selectedTarget = "All Students";
+
+function filterTarget(target){
+selectedTarget = target;
+applyFilters();
+}
+
+function showUrgent(){
+renderNotices(
+notices.filter(n=>n.urgent)
+);
+}
+
+function showImportant(){
+renderNotices(
+notices.filter(n=>n.important)
+);
+}
+
+function showExpired(){
+let today=new Date();
+renderNotices(
+notices.filter(n=>
+n.expiryDate!=="No Expiry" &&
+new Date(n.expiryDate)<today
+)
+);
+}
+
+
+/* Render notices */
+function renderNotices(list){
+
+container.innerHTML="";
+let today=new Date();
+
+if(list.length===0){
+container.innerHTML="<h2>No Notices Found</h2>";
+updateCounts();
+return;
+}
+
+list.forEach(n=>{
+
+let div=document.createElement("div");
+div.className="notice";
+
+let badge="";
+
+if(n.urgent){
+badge=`<div class="badge urgent-blink" style="background:red;">URGENT</div>`;
+}
+else{
+if(n.expiryDate!=="No Expiry"){
+let expiry=new Date(n.expiryDate);
+let diff=(expiry-today)/(1000*60*60*24);
+
+if(diff<=2 && diff>=0){
+badge=`<div class="badge expiring-badge">EXPIRING SOON</div>`;
+}
+else if(n.important){
+badge=`<div class="badge" style="background:gold;color:black;">IMPORTANT</div>`;
+}
+else{
+badge=`<div class="badge" style="background:gray;">GENERAL</div>`;
+}
+}
+}
+
+div.innerHTML=`
+${badge}
+<h3>${n.title}</h3>
+<p>${n.description}</p>
+<small>Category: ${n.category}</small><br>
+<small>Target: ${n.target}</small><br>
+<small>Posted: ${n.postedDate}</small><br>
+<small>Expiry: ${n.expiryDate}</small><br><br>
+${n.file?`
+<small>${getFileIcon(n.file)}</small><br><br>
+<button class="btn" onclick="previewFile('${n.file}')">Open</button>
+<button class="btn" onclick="downloadFile('${n.file}','${n.title}')">Download</button>
+`:`<small>No File</small>`}
+`;
+
+container.appendChild(div);
+});
+
+updateCounts();
+}
+
+/* Modal preview and close */
+function previewFile(file){modalBody.innerHTML=`<iframe src="${file}" width="100%" height="500"></iframe>`; previewModal.style.display="flex";}
+function closeModal(){previewModal.style.display="none"; modalBody.innerHTML="";}
+
+/* Download */
+function downloadFile(file,name){let a=document.createElement("a"); a.href=file; a.download=name; a.click();}
+
+/* Filters */
+function filterCategory(cat){
+selectedCategory = cat;
+applyFilters();
+}
+function applyFilters(){
+
+let filtered = notices;
+
+// CATEGORY FILTER
+if(selectedCategory !== "All"){
+filtered = filtered.filter(n => n.category === selectedCategory);
+}
+
+// TARGET FILTER
+filtered = filtered.filter(n => n.target === selectedTarget);
+
+renderNotices(filtered);
+}
+
+
+/* Search */
+function searchNotice(val){
+    renderNotices(notices.filter(n=>n.title.toLowerCase().includes(val.toLowerCase())||n.description.toLowerCase().includes(val.toLowerCase())));
+}
+
+/* Important & expired notices */
+function showImportantNotices(){renderNotices(notices.filter(n=>n.important));}
+function showExpiredNotices(){let today=new Date(); renderNotices(notices.filter(n=>n.expiryDate!=="No Expiry" && new Date(n.expiryDate)<today));}
+
+/* Update counter badges */
+function updateCounts(){
+
+let categories={
+countAll:notices.length,
+countGeneral:notices.filter(n=>n.category==="General").length,
+countEvent:notices.filter(n=>n.category==="Event").length,
+countExam:notices.filter(n=>n.category==="Exam").length,
+countHoliday:notices.filter(n=>n.category==="Holiday").length,
+countSports:notices.filter(n=>n.category==="Sports").length,
+countCultural:notices.filter(n=>n.category==="Cultural").length,
+countWorkshop:notices.filter(n=>n.category==="Workshop").length,
+countSeminar:notices.filter(n=>n.category==="Seminar").length
+};
+
+for(let id in categories){
+let el=document.getElementById(id);
+if(el){
+el.innerText=categories[id];
+el.style.display=categories[id]===0?"none":"inline-block";
+}
+}
+}
+
+
+/* AUTO REFRESH */
+function autoRefresh(){
+    loadNotices();
+    renderNotices(notices);
+    updateCategoryCounts();
+}
+
+setInterval(autoRefresh,120000);
+autoRefresh();
+
+function getFileIcon(file){
+    if(!file) return "";
+
+    if(file.includes("pdf")) return "📄 PDF";
+    if(file.includes("image")) return "🖼 Image";
+    return "📁 File";
+}
+
+</script>
+
+</body>
+</html>

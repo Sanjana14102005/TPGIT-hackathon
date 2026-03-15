@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Faculty Login</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(-45deg, #0f2027, #203a43, #2c5364, #1c92d2);
+            background-size: 400% 400%;
+            animation: gradientMove 12s ease infinite;
+            overflow: hidden;
+        }
+
+        @keyframes gradientMove {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        /* Floating particles */
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 50%;
+            animation: rise 15s infinite ease-in;
+        }
+
+        @keyframes rise {
+            0% { transform: translateY(0); opacity: 0; }
+            50% { opacity: 1; }
+            100% { transform: translateY(-120vh); opacity: 0; }
+        }
+
+        .bubble:nth-child(1){ left:10%; animation-duration:12s; }
+        .bubble:nth-child(2){ left:30%; width:60px;height:60px; animation-duration:18s; }
+        .bubble:nth-child(3){ left:55%; animation-duration:15s; }
+        .bubble:nth-child(4){ left:75%; width:50px;height:50px; animation-duration:20s; }
+        .bubble:nth-child(5){ left:90%; animation-duration:14s; }
+
+        /* Login Box */
+        .login-box {
+            position: relative;
+            width: 380px;
+            padding: 45px 35px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(20px);
+            box-shadow: 0 0 30px rgba(0,255,255,0.4);
+            text-align: center;
+            color: white;
+            animation: fadeIn 1.2s ease;
+        }
+
+        @keyframes fadeIn {
+            from { transform: translateY(40px); opacity:0; }
+            to { transform: translateY(0); opacity:1; }
+        }
+
+        .login-box h2 {
+            margin-bottom: 30px;
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        .icon {
+            font-size: 45px;
+            margin-bottom: 15px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%,100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        .input-group {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.3);
+            background: transparent;
+            color: white;
+            outline: none;
+            font-size: 14px;
+            transition: 0.3s;
+        }
+
+        .input-group input::placeholder {
+            color: #ddd;
+        }
+
+        .input-group input:focus {
+            border-color: #00f2fe;
+            box-shadow: 0 0 15px #00f2fe;
+        }
+
+        /* Show password icon */
+        .toggle-password {
+            position: absolute;
+            right: 12px;
+            top: 14px;
+            cursor: pointer;
+            font-size: 14px;
+            color: #ccc;
+        }
+
+        button {
+            width: 100%;
+            padding: 14px;
+            border-radius: 10px;
+            border: none;
+            background: linear-gradient(90deg, #00f2fe, #ff00cc);
+            color: white;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+            letter-spacing: 1px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 0 25px #ff00cc;
+        }
+
+        /* Ripple effect */
+        button::after {
+            content:"";
+            position:absolute;
+            width:0;
+            height:0;
+            background:rgba(255,255,255,0.4);
+            border-radius:50%;
+            top:50%;
+            left:50%;
+            transform:translate(-50%,-50%);
+            transition:0.5s;
+        }
+
+        button:active::after{
+            width:300px;
+            height:300px;
+        }
+
+        .tagline {
+            margin-top: 20px;
+            font-size: 13px;
+            color: #ccc;
+        }
+
+    </style>
+</head>
+
+<body>
+
+<!-- Floating bubbles -->
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+<div class="bubble"></div>
+
+<div class="login-box">
+
+    <div class="icon">👩‍🏫</div>
+
+    <h2>Faculty Portal</h2>
+
+    <div class="input-group">
+        <input type="text" id="username" placeholder="Enter Username">
+    </div>
+
+    <div class="input-group">
+        <input type="password" id="password" placeholder="Enter Password">
+        <span class="toggle-password" onclick="togglePassword()">👁</span>
+    </div>
+
+    <button onclick="validate()">LOGIN</button>
+
+    <div class="tagline">
+        Secure • Smart • Professional Access
+    </div>
+
+</div>
+
+<script>
+function togglePassword(){
+    let pass = document.getElementById("password");
+    pass.type = pass.type === "password" ? "text" : "password";
+}
+</script>
+
+<script src="js/faculty_login.js"></script>
+
+</body>
+</html>
