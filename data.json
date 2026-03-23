@@ -1,12 +1,58 @@
 [
   {
-    "title": "Hackathon Announcement",
-    "description": "Submit your project before Friday 5PM.",
-    "image": "images/notice1.jpg"
+    "attendance": 92,
+    "studyHours": 5,
+    "internalMarks": 78,
+    "assignment": true,
+    "previousGPA": 3.4,
+    "participation": 4
   },
   {
-    "title": "Exam Postponed",
-    "description": "The internal exam is postponed to next Monday.",
-    "image": "images/notice2.jpg"
+    "attendance": 75,
+    "studyHours": 3,
+    "internalMarks": 62,
+    "assignment": true,
+    "previousGPA": 2.8,
+    "participation": 3
+  },
+  {
+    "attendance": 88,
+    "studyHours": 6,
+    "internalMarks": 85,
+    "assignment": true,
+    "previousGPA": 3.6,
+    "participation": 5
+  },
+  {
+    "attendance": 65,
+    "studyHours": 2,
+    "internalMarks": 55,
+    "assignment": false,
+    "previousGPA": 2.2,
+    "participation": 2
+  },
+  {
+    "attendance": 95,
+    "studyHours": 4,
+    "internalMarks": 82,
+    "assignment": true,
+    "previousGPA": 3.5,
+    "participation": 4
+  },
+  {
+    "attendance": 70,
+    "studyHours": 3.5,
+    "internalMarks": 58,
+    "assignment": true,
+    "previousGPA": 2.5,
+    "participation": 2
+  },
+  {
+    "attendance": 82,
+    "studyHours": 4.5,
+    "internalMarks": 72,
+    "assignment": true,
+    "previousGPA": 3.0,
+    "participation": 4
   }
 ]

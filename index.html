@@ -1,299 +1,686 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CSE Digital Notice Board</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-
-<style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-body{
-    background:#0f172a;
-    color:white;
-    overflow-x:hidden;
-}
-
-/* ================= MARQUEE ================= */
-
-.marquee-container{
-    background:#020617;
-    padding:8px 0;
-    color:#38bdf8;
-    font-weight:600;
-    position:fixed;
-    top:0;
-    width:100%;
-    z-index:1100;
-}
-
-/* ================= NAVBAR ================= */
-
-.navbar{
-    position:fixed;
-    top:40px;
-    width:100%;
-    padding:18px 8%;
-    display:flex;
-    justify-content:flex-end;
-    align-items:center;
-    background:rgba(0,0,0,0.6);
-    backdrop-filter:blur(10px);
-    z-index:1000;
-}
-
-/* ================= DROPDOWN ================= */
-
-.dropdown{
-    position:relative;
-    display:inline-block;
-}
-
-.dropbtn{
-    background:linear-gradient(135deg,#0ea5e9,#2563eb);
-    color:white;
-    padding:10px 30px;
-    border:none;
-    border-radius:30px;
-    cursor:pointer;
-    font-weight:500;
-    transition:0.3s;
-}
-
-.dropbtn:hover{
-    transform:translateY(-2px);
-    box-shadow:0 10px 25px rgba(37,99,235,0.5);
-}
-
-.dropdown-content{
-    display:none;
-    position:absolute;
-    top:45px;
-    right:0;
-    background:#111827;
-    min-width:180px;
-    border-radius:12px;
-    overflow:hidden;
-    box-shadow:0 10px 25px rgba(0,0,0,0.5);
-}
-
-.dropdown-content a{
-    display:block;
-    padding:12px;
-    text-decoration:none;
-    color:white;
-    transition:0.3s;
-}
-
-.dropdown-content a:hover{
-    background:#2563eb;
-}
-
-.dropdown.show .dropdown-content{
-    display:block;
-}
-
-/* ================= HERO ================= */
-
-.hero{
-    position:relative;
-    height:100vh;
-    background:url("images/notice.jpg") no-repeat center center/cover;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    text-align:center;
-    padding-top:100px;
-}
-
-.hero::before{
-    content:"";
-    position:absolute;
-    width:100%;
-    height:100%;
-    background:linear-gradient(to bottom,rgba(0,0,0,0.85),rgba(0,0,0,0.75));
-    top:0;
-    left:0;
-}
-
-.hero-content{
-    position:relative;
-    z-index:2;
-    max-width:900px;
-    margin-top:-40px;
-}
-
-/* Department Text */
-
-.hero-content h3{
-    font-size:28px;
-    font-weight:700;
-    letter-spacing:4px;
-    color:#38bdf8;
-    margin-bottom:20px;
-    text-transform:uppercase;
-}
-
-/* Main Title */
-
-.hero-content h1{
-    font-size:52px;
-    font-weight:800;
-    margin-bottom:15px;
-}
-
-.hero-content h2{
-    font-size:24px;
-    font-weight:400;
-    color:#cbd5e1;
-}
-
-/* ================= SECTIONS ================= */
-
-.section{
-    padding:100px 10%;
-    background:#0f172a;
-    color:#e2e8f0;
-}
-
-.section h2{
-    text-align:center;
-    margin-bottom:60px;
-    font-size:32px;
-    color:#38bdf8;
-}
-
-.grid{
-    display:grid;
-    grid-template-columns:repeat(auto-fit,minmax(300px,1fr));
-    gap:50px;
-    align-items:center;
-}
-
-.grid img{
-    width:100%;
-    height:320px;
-    object-fit:cover;
-    border-radius:20px;
-    box-shadow:0 15px 30px rgba(0,0,0,0.6);
-    transition:0.4s;
-}
-
-.grid img:hover{
-    transform:scale(1.05);
-}
-
-.grid p{
-    line-height:1.9;
-}
-
-/* ================= FOOTER ================= */
-
-.footer{
-    background:#020617;
-    padding:25px;
-    text-align:center;
-}
-
-/* ================= RESPONSIVE ================= */
-
-@media(max-width:768px){
-    .hero-content h1{
-        font-size:36px;
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Smart Student Performance Advisory System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --royal-deep: #0a0f1a;
+      --royal-navy: #0f172a;
+      --royal-blue: #1e3a5f;
+      --royal-mid: #2563eb;
+      --glass-bg: rgba(255, 255, 255, 0.06);
+      --glass-bg-strong: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.12);
+      --text-primary: #f1f5f9;
+      --text-muted: #94a3b8;
+      --safe: #22c55e;
+      --warning: #eab308;
+      --high-risk: #ef4444;
+      --shadow-soft: 0 4px 24px rgba(0, 0, 0, 0.15);
+      --shadow-card: 0 8px 32px rgba(0, 0, 0, 0.2);
     }
 
-    .hero-content h3{
-        font-size:20px;
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
+      background: linear-gradient(160deg, #1e3a5f 0%, #0f172a 35%, #0a0f1a 100%);
+      min-height: 100vh;
+      color: var(--text-primary);
+      line-height: 1.6;
+      position: relative;
+      overflow-x: hidden;
     }
-}
-</style>
+
+    /* Animated background shapes */
+    .bg-blobs {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(80px);
+      opacity: 0.25;
+      animation: blobFloat 20s ease-in-out infinite;
+    }
+    .blob-1 { width: 400px; height: 400px; background: var(--royal-mid); top: -10%; right: -5%; animation-delay: 0s; }
+    .blob-2 { width: 320px; height: 320px; background: #3b82f6; bottom: 10%; left: -8%; animation-delay: -7s; }
+    .blob-3 { width: 280px; height: 280px; background: #1e40af; top: 50%; left: 30%; animation-delay: -14s; opacity: 0.15; }
+    @keyframes blobFloat {
+      0%, 100% { transform: translate(0, 0) scale(1); }
+      33% { transform: translate(30px, -30px) scale(1.05); }
+      66% { transform: translate(-20px, 20px) scale(0.95); }
+    }
+
+    .page-wrap { position: relative; z-index: 1; min-height: 100vh; }
+
+    /* Header */
+    .header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(10, 15, 26, 0.8);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--glass-border);
+      padding: 0.9rem 1.5rem;
+      animation: fadeInDown 0.6s ease-out;
+    }
+    .header-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    .header-title { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); }
+    .header-tagline { font-size: 0.8rem; color: var(--text-muted); }
+
+    /* Hero */
+    .hero {
+      text-align: center;
+      padding: 3.5rem 1.5rem 2.5rem;
+      animation: heroReveal 1s ease-out 0.2s both;
+    }
+    .hero-icons {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 0.6rem;
+      animation: iconPulse 2s ease-in-out infinite;
+    }
+    .hero h1 {
+      font-size: clamp(1.85rem, 5vw, 2.75rem);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      background: linear-gradient(120deg, #fff 0%, #e2e8f0 50%, #cbd5e1 100%);
+      background-size: 200% auto;
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      animation: titleShine 4s linear infinite;
+    }
+    .hero-subtitle {
+      font-size: 1.15rem;
+      color: var(--royal-mid);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+    .hero-tagline { font-size: 0.95rem; color: var(--text-muted); }
+    @keyframes heroReveal {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes titleShine {
+      to { background-position: 200% center; }
+    }
+    @keyframes iconPulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.9; transform: scale(1.05); }
+    }
+    @keyframes fadeInDown {
+      from { opacity: 0; transform: translateY(-12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Layout */
+    .container { max-width: 920px; margin: 0 auto; padding: 0 1.5rem 3rem; }
+
+    /* Cards - glassmorphism dashboard */
+    .card {
+      background: var(--glass-bg);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border);
+      border-radius: 20px;
+      padding: 1.75rem;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--shadow-soft);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+      animation: cardFadeIn 0.6s ease-out both;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: var(--shadow-card);
+    }
+    .card-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    @keyframes cardFadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Input form card */
+    .card.input-card {
+      background: var(--glass-bg-strong);
+      box-shadow: var(--shadow-card);
+      animation-delay: 0.1s;
+    }
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.35rem;
+    }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .form-group label {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .form-group input,
+    .form-group select {
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      border: 1px solid var(--glass-border);
+      background: rgba(255, 255, 255, 0.05);
+      color: var(--text-primary);
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s, background 0.2s, box-shadow 0.2s;
+    }
+    .form-group input:hover,
+    .form-group select:hover {
+      background: rgba(255, 255, 255, 0.08);
+    }
+    .form-group input:focus,
+    .form-group select:focus {
+      outline: none;
+      border-color: var(--royal-mid);
+      background: rgba(255, 255, 255, 0.08);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+    }
+    .form-group input::placeholder { color: var(--text-muted); opacity: 0.85; }
+    .form-group input[type="number"] { appearance: textfield; -moz-appearance: textfield; }
+    .form-group input[type="number"]::-webkit-outer-spin-button,
+    .form-group input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* Toggle switch for assignment */
+    .toggle-wrap {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .toggle-switch {
+      display: inline-flex;
+      align-items: center;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 999px;
+      padding: 4px;
+      border: 1px solid var(--glass-border);
+      cursor: pointer;
+    }
+    .toggle-switch label {
+      margin: 0;
+      padding: 0.5rem 1rem;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      border-radius: 999px;
+      transition: color 0.2s, background 0.2s;
+    }
+    .toggle-switch input { display: none; }
+    .toggle-switch input:checked + label {
+      background: var(--royal-mid);
+      color: #fff;
+    }
+    .toggle-switch label:first-of-type { margin-right: 2px; }
+
+    .radio-group { display: flex; gap: 0; align-items: center; }
+    .radio-group .toggle-wrap { width: 100%; }
+
+    .btn {
+      padding: 0.9rem 1.85rem;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      border: none;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, var(--royal-mid) 0%, #1d4ed8 100%);
+      color: white;
+      margin-top: 0.5rem;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 28px rgba(37, 99, 235, 0.45);
+    }
+    .btn-primary:active { transform: translateY(0); }
+    .btn-secondary {
+      background: var(--glass-bg-strong);
+      color: var(--text-primary);
+      border: 1px solid var(--glass-border);
+    }
+    .btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.12);
+      border-color: var(--royal-mid);
+    }
+
+    /* Results dashboard */
+    #resultsDashboard {
+      display: none;
+      animation: dashboardReveal 0.6s ease-out;
+    }
+    #resultsDashboard.visible { display: block; }
+    @keyframes dashboardReveal {
+      from { opacity: 0; transform: translateY(16px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .dashboard-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1.25rem;
+    }
+
+    /* Circular risk progress */
+    .risk-circle-wrap {
+      position: relative;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 1rem;
+    }
+    .risk-circle-wrap svg {
+      transform: rotate(-90deg);
+      width: 100%;
+      height: 100%;
+    }
+    .risk-circle-wrap .risk-circle-bg {
+      fill: none;
+      stroke: rgba(255, 255, 255, 0.1);
+      stroke-width: 10;
+    }
+    .risk-circle-wrap .risk-circle-fill {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      transition: stroke-dashoffset 0.7s ease, stroke 0.3s ease;
+    }
+    .risk-circle-wrap .risk-circle-fill.safe { stroke: var(--safe); }
+    .risk-circle-wrap .risk-circle-fill.warning { stroke: var(--warning); }
+    .risk-circle-wrap .risk-circle-fill.high-risk { stroke: var(--high-risk); }
+    .risk-circle-score {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text-primary);
+    }
+
+    .risk-badge {
+      display: inline-block;
+      padding: 0.45rem 1rem;
+      border-radius: 999px;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+    .risk-badge.safe { background: rgba(34, 197, 94, 0.2); color: var(--safe); border: 1px solid var(--safe); }
+    .risk-badge.warning { background: rgba(234, 179, 8, 0.2); color: var(--warning); border: 1px solid var(--warning); }
+    .risk-badge.high-risk { background: rgba(239, 68, 68, 0.2); color: var(--high-risk); border: 1px solid var(--high-risk); }
+
+    .risk-meter-wrap {
+      margin-top: 0.75rem;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .risk-meter-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s ease, background 0.3s ease;
+    }
+    .risk-meter-fill.safe { background: linear-gradient(90deg, var(--safe), #16a34a); }
+    .risk-meter-fill.warning { background: linear-gradient(90deg, var(--warning), #ca8a04); }
+    .risk-meter-fill.high-risk { background: linear-gradient(90deg, var(--high-risk), #dc2626); }
+    .risk-score-text { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem; }
+
+    /* Metric progress bars (attendance, study, internal) */
+    .metrics-bars .metric-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+    .metrics-bars .metric-row:last-child { margin-bottom: 0; }
+    .metrics-bars .metric-label {
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      min-width: 120px;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .metrics-bars .metric-bar-wrap {
+      flex: 1;
+      height: 10px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .metrics-bars .metric-bar-fill {
+      height: 100%;
+      border-radius: 999px;
+      transition: width 0.6s ease;
+      background: linear-gradient(90deg, var(--royal-mid), #3b82f6);
+    }
+
+    /* Early warning */
+    .alert {
+      padding: 1rem 1.25rem;
+      border-radius: 14px;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .alert-warning {
+      background: rgba(234, 179, 8, 0.12);
+      border: 1px solid rgba(234, 179, 8, 0.4);
+      color: #fde047;
+    }
+    .alert-danger {
+      background: rgba(239, 68, 68, 0.12);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+    }
+
+    .recommendations-list { list-style: none; }
+    .recommendations-list li {
+      padding: 0.45rem 0;
+      padding-left: 1.35rem;
+      position: relative;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .recommendations-list li::before {
+      content: "→";
+      position: absolute;
+      left: 0;
+      color: var(--royal-mid);
+      font-weight: 600;
+    }
+
+    .peer-list { list-style: none; }
+    .peer-list li {
+      padding: 0.4rem 0;
+      font-size: 0.9rem;
+      color: var(--text-muted);
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+    }
+    .peer-list .you { color: var(--text-primary); font-weight: 500; }
+    .peer-list .avg { color: var(--text-muted); }
+
+    .whatif-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      align-items: flex-end;
+      margin-bottom: 1rem;
+    }
+    .whatif-row .form-group { flex: 1; min-width: 140px; }
+    .whatif-result {
+      margin-top: 1rem;
+      padding: 1rem 1.25rem;
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 12px;
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+    .whatif-result strong { color: var(--text-primary); }
+
+    .metric-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); }
+    .metric-label { font-size: 0.85rem; color: var(--text-muted); margin-top: 0.25rem; }
+    .validation-error { color: var(--high-risk); font-size: 0.85rem; margin-top: 0.25rem; }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 600px) {
+      .header-inner { flex-direction: column; align-items: flex-start; }
+      .hero { padding: 2.5rem 1rem 2rem; }
+      .hero-icons { letter-spacing: 0.3rem; }
+      .card { padding: 1.35rem; border-radius: 16px; }
+      .form-grid { grid-template-columns: 1fr; }
+    }
+  </style>
 </head>
-
 <body>
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+  </div>
 
-<div class="marquee-container">
-    <marquee behavior="scroll" direction="left" scrollamount="12">
-        Welcome to Thanthai Periyaar Government Institute Of Technology Vellore
-    </marquee>
-</div>
+  <div class="page-wrap">
+    <header class="header">
+      <div class="header-inner">
+        <span class="header-title">Smart Student Performance Advisory System</span>
+        <span class="header-tagline">Data-Driven Academic Intelligence for Student Success</span>
+      </div>
+    </header>
 
-<div class="navbar">
-    <div class="dropdown" id="loginDropdown">
-        <button class="dropbtn" onclick="toggleLogin()">Login ▼</button>
-        <div class="dropdown-content">
-            <a href="admin_login.html">Admin Login</a>
-            <a href="faculty_login.html">Faculty Login</a>
-            <a href="student_login.html">Student Login</a>
+    <section class="hero">
+      <div class="hero-icons">🎓 📊 📈 🚀</div>
+      <h1>Smart Student Performance Advisory System</h1>
+      <p class="hero-subtitle">Data-Driven Academic Intelligence</p>
+      <p class="hero-tagline">Academic Analytics Dashboard for Student Success</p>
+    </section>
+
+    <div class="container">
+      <div class="card input-card">
+        <h2 class="card-title">📊 Enter Your Academic Data</h2>
+        <form id="analysisForm">
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="attendance">📅 Attendance (%)</label>
+              <input type="number" id="attendance" name="attendance" min="0" max="100" step="1" placeholder="e.g. 85" required>
+              <span class="validation-error" id="err-attendance"></span>
+            </div>
+            <div class="form-group">
+              <label for="studyHours">📚 Study Hours per Day</label>
+              <input type="number" id="studyHours" name="studyHours" min="0" max="24" step="0.5" placeholder="e.g. 4" required>
+              <span class="validation-error" id="err-studyHours"></span>
+            </div>
+            <div class="form-group">
+              <label for="internalMarks">📝 Internal Marks</label>
+              <input type="number" id="internalMarks" name="internalMarks" min="0" max="100" step="1" placeholder="e.g. 72" required>
+              <span class="validation-error" id="err-internalMarks"></span>
+            </div>
+            <div class="form-group">
+              <label for="previousGPA">📈 Previous Semester GPA</label>
+              <input type="number" id="previousGPA" name="previousGPA" min="0" max="4" step="0.1" placeholder="e.g. 3.2" required>
+              <span class="validation-error" id="err-previousGPA"></span>
+            </div>
+            <div class="form-group">
+              <label>✅ Assignment Submitted</label>
+              <div class="radio-group">
+                <div class="toggle-switch">
+                  <input type="radio" id="assign-yes" name="assignment" value="yes" required>
+                  <label for="assign-yes">Yes</label>
+                  <input type="radio" id="assign-no" name="assignment" value="no">
+                  <label for="assign-no">No</label>
+                </div>
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="participation">🎯 Class Participation (1–5)</label>
+              <input type="number" id="participation" name="participation" min="1" max="5" step="1" placeholder="e.g. 4" required>
+              <span class="validation-error" id="err-participation"></span>
+            </div>
+          </div>
+          <button type="submit" class="btn btn-primary">Analyze</button>
+        </form>
+      </div>
+
+      <div id="dataError" class="alert alert-danger" style="display: none; margin-bottom: 1rem;">
+        Could not load peer data. Please run from a local server (e.g. npx serve .) so data.json can be fetched.
+      </div>
+
+      <div id="resultsDashboard">
+        <div class="dashboard-grid">
+          <div class="card">
+            <h3 class="card-title">Risk Level</h3>
+            <div class="risk-circle-wrap">
+              <svg viewBox="0 0 100 100">
+                <circle class="risk-circle-bg" cx="50" cy="50" r="44"/>
+                <circle id="riskCircleFill" class="risk-circle-fill safe" cx="50" cy="50" r="44" stroke-dasharray="276.46" stroke-dashoffset="276.46"/>
+              </svg>
+              <span id="riskCircleScore" class="risk-circle-score">0</span>
+            </div>
+            <div id="riskLevelBadge" class="risk-badge">—</div>
+            <div class="risk-meter-wrap">
+              <div id="riskMeterFill" class="risk-meter-fill safe" style="width: 0%;"></div>
+            </div>
+            <p id="riskScoreText" class="risk-score-text">Risk Score: —</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Performance Consistency Index</h3>
+            <div id="consistencyValue" class="metric-value">—</div>
+            <p id="consistencyLabel" class="metric-label">—</p>
+          </div>
+          <div class="card">
+            <h3 class="card-title">Habit–Performance Correlation</h3>
+            <p id="habitInsight" class="metric-label" style="font-size: 0.95rem;">—</p>
+          </div>
         </div>
+
+        <div class="card metrics-bars" id="metricsBarsCard">
+          <h3 class="card-title">📊 Your Key Metrics</h3>
+          <div class="metric-row">
+            <span class="metric-label">📅 Attendance</span>
+            <div class="metric-bar-wrap">
+              <div class="metric-bar-fill" id="metricsAttendance" style="width: 0%;"></div>
+            </div>
+            <span class="metric-value" id="metricsAttendanceVal" style="font-size: 0.95rem; min-width: 2.5rem;">0%</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">📚 Study hrs/day</span>
+            <div class="metric-bar-wrap">
+              <div class="metric-bar-fill" id="metricsStudy" style="width: 0%;"></div>
+            </div>
+            <span class="metric-value" id="metricsStudyVal" style="font-size: 0.95rem; min-width: 2.5rem;">0</span>
+          </div>
+          <div class="metric-row">
+            <span class="metric-label">📝 Internal marks</span>
+            <div class="metric-bar-wrap">
+              <div class="metric-bar-fill" id="metricsInternal" style="width: 0%;"></div>
+            </div>
+            <span class="metric-value" id="metricsInternalVal" style="font-size: 0.95rem; min-width: 2.5rem;">0%</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">👥 Peer Benchmark Comparison</h3>
+          <ul id="peerComparison" class="peer-list"></ul>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">💡 Personalized Recommendations</h3>
+          <ul id="recommendations" class="recommendations-list"></ul>
+        </div>
+
+        <div id="earlyWarningBlock" class="card" style="display: none;">
+          <h3 class="card-title">⚠️ Early Warning</h3>
+          <div id="earlyWarningContent" class="alert alert-warning"></div>
+        </div>
+
+        <div class="card">
+          <h3 class="card-title">🔮 What-If Simulation</h3>
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">Adjust values to see projected risk.</p>
+          <div class="whatif-row">
+            <div class="form-group">
+              <label for="whatifAttendance">+ Attendance (%)</label>
+              <input type="number" id="whatifAttendance" min="0" max="100" step="1" placeholder="0" value="0">
+            </div>
+            <div class="form-group">
+              <label for="whatifStudyHours">+ Study Hours</label>
+              <input type="number" id="whatifStudyHours" min="0" max="24" step="0.5" placeholder="0" value="0">
+            </div>
+            <button type="button" id="btnSimulate" class="btn btn-secondary">Simulate</button>
+          </div>
+          <div id="whatifResult" class="whatif-result" style="display: none;"></div>
+        </div>
+      </div>
     </div>
-</div>
+  </div>
 
-<section class="hero">
-    <div class="hero-content">
-        <h3>DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING</h3>
-        <h1>Digital Notice Board</h1>
-        <h2>📲 Stay Updated • 📈 Stay Ahead • 🌐 Stay Connected</h2>
-    </div>
-</section>
+  <script src="logic.js"></script>
+  <script>
+    (function() {
+      var form = document.getElementById('analysisForm');
+      var circFill = document.getElementById('riskCircleFill');
+      var circScore = document.getElementById('riskCircleScore');
+      var scoreText = document.getElementById('riskScoreText');
+      var dash = document.getElementById('resultsDashboard');
+      var circumference = 2 * Math.PI * 44;
 
-<section class="section">
-    <h2>Engineering Education Excellence</h2>
-    <div class="grid">
-        <img src="images/certificate.png">
-        <p>
-            TPGIT provides industry-oriented engineering education with strong
-            academic foundations and real-time exposure. Students participate in
-            coding competitions, research initiatives, workshops, and technical
-            symposiums to enhance their professional capabilities.
-        </p>
-    </div>
-</section>
+      function updateCircleAndBars() {
+        if (!dash || !dash.classList.contains('visible')) return;
+        var m = scoreText && scoreText.textContent ? scoreText.textContent.match(/\d+/) : null;
+        var score = m ? parseInt(m[0], 10) : 0;
+        var badge = document.getElementById('riskLevelBadge');
+        var level = badge && badge.className ? (badge.className.match(/safe|warning|high-risk/) || ['safe'])[0] : 'safe';
+        if (circFill) {
+          var offset = circumference - (score / 100) * circumference;
+          circFill.style.strokeDashoffset = offset;
+          circFill.className = 'risk-circle-fill ' + level;
+        }
+        if (circScore) circScore.textContent = score;
 
-<section class="section">
-    <h2>Placement & Career Development</h2>
-    <div class="grid">
-        <p>
-            Dedicated placement training programs, aptitude development,
-            mock interviews, and company-specific coaching ensure excellent
-            career outcomes for students across multiple IT and core industries.
-        </p>
-        <img src="images/placement.png">
-    </div>
-</section>
+        var att = document.getElementById('attendance');
+        var study = document.getElementById('studyHours');
+        var internal = document.getElementById('internalMarks');
+        var barAtt = document.getElementById('metricsAttendance');
+        var barStudy = document.getElementById('metricsStudy');
+        var barInternal = document.getElementById('metricsInternal');
+        var valAtt = document.getElementById('metricsAttendanceVal');
+        var valStudy = document.getElementById('metricsStudyVal');
+        var valInternal = document.getElementById('metricsInternalVal');
+        if (barAtt && att) { var v = Math.min(100, Math.max(0, parseFloat(att.value) || 0)); barAtt.style.width = v + '%'; if (valAtt) valAtt.textContent = v + '%'; }
+        if (barStudy && study) { var v = Math.min(24, Math.max(0, parseFloat(study.value) || 0)); var pct = (v / 8) * 100; barStudy.style.width = pct + '%'; if (valStudy) valStudy.textContent = v; }
+        if (barInternal && internal) { var v = Math.min(100, Math.max(0, parseFloat(internal.value) || 0)); barInternal.style.width = v + '%'; if (valInternal) valInternal.textContent = v + '%'; }
+      }
 
-<section class="section">
-    <h2>IT Innovation & Research</h2>
-    <div class="grid">
-        <img src="images/IT.png">
-        <p>
-            Advanced computing labs, AI research exposure, cybersecurity training,
-            and full-stack development initiatives prepare students to excel in
-            emerging technological domains.
-        </p>
-    </div>
-</section>
-
-<div class="footer">
-    © 2026 Digital Notice Board | CSE Department
-</div>
-
-<script>
-function toggleLogin(){
-    document.getElementById("loginDropdown").classList.toggle("show");
-}
-
-window.onclick = function(e){
-    if(!e.target.matches('.dropbtn')){
-        document.getElementById("loginDropdown").classList.remove("show");
-    }
-}
-</script>
-
+      if (form) {
+        form.addEventListener('submit', function() {
+          setTimeout(updateCircleAndBars, 250);
+        });
+      }
+    })();
+  </script>
 </body>
 </html>
